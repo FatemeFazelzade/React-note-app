@@ -22,11 +22,27 @@
   grid-row-start: 2;
 }
 
+select {
+  outline: none;
+  border-radius: 2em;
+  background: #f4f2f2;
+  padding: 0.5rem;
+  margin: 0.5rem;
+  transition: 0.4s;
+  border: none;
+}
+
+select:hover,
+select:focus {
+  background: #f0eeee;
+}
+
 .tab {
   display: flex;
   justify-content: space-between;
   list-style-type: none;
   margin-top: 2vw;
+  padding: 2vh 6vw;
 }
 
 .search {
@@ -34,6 +50,7 @@
   align-items: center;
   flex-flow: column wrap;
   margin-top: 2vw;
+  padding: 2vh 6vw;
 }
 
 .search__input {
@@ -45,13 +62,17 @@
   padding: 0.7rem 2rem;
   border-radius: 30px;
   width: 30em;
-  transition: all ease-in-out 0.5s;
   margin-top: 2vw;
+  transition: 0.4s;
 }
 
 .search__input:focus {
   outline: none;
   background-color: #f0eeee;
+}
+
+.body {
+  height: 5rem;
 }
 
 .search__button {
@@ -62,4 +83,26 @@
   border-radius: 30px;
   width: 15vh;
   height: 5vh;
+}
+
+.note-card {
+  margin: 5vh 5vw;
+  padding: 4vh 2.5vw;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border-radius: 30px;
+  background-color: #f0eeee;
+}
+
+.note-card__details {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.note-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }

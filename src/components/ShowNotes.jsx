@@ -16,6 +16,18 @@ function ShowNotesNav() {
         <li className="tab-item">Completed</li>
         <li className="tab-item">Open</li>
       </ul>
+      <div className="note-card">
+        <div className="note-card__body">
+          <h3>Doctor's appointment</h3>
+          <p>Rmember to take your ID card!</p>
+        </div>
+        <div className="note-card__details">
+          <input type="checkbox"></input>
+          <span>
+            <img src="/images/trash.svg" alt="trash svg icon" />
+          </span>
+        </div>
+      </div>
     </div>
   );
 }
