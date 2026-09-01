@@ -20,11 +20,16 @@ function ShowNotesNav() {
         <div className="note-card__body">
           <h3>Doctor's appointment</h3>
           <p>Rmember to take your ID card!</p>
+          <div className="date">Jan 13, 2026</div>
         </div>
         <div className="note-card__details">
           <input type="checkbox"></input>
           <span>
-            <img src="/images/trash.svg" alt="trash svg icon" />
+            <img
+              className="icon-trash"
+              src="/images/trash.svg"
+              alt="trash svg icon"
+            />
           </span>
         </div>
       </div>
