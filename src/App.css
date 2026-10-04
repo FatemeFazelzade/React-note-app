@@ -133,3 +133,7 @@ select:focus {
 .empty {
   margin: 8rem 11rem;
 }
+
+.note-card__delete {
+  border: none;
+}

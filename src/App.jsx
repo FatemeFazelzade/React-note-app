@@ -6,11 +6,14 @@ import ShowNotes from "./components/ShowNotes";
 
 function App() {
   const [notes, setNotes] = useState([]);
+  const handleDeleteNote = (id) => {
+    setNotes((prevNotes) => prevNotes.filter((n) => n.id !== id));
+  };
   return (
     <div className="layout">
       <Header />
       <AddNotes setNotes={setNotes} />
-      <ShowNotes notes={notes} />
+      <ShowNotes notes={notes} onDelete={handleDeleteNote} />
     </div>
   );
 }

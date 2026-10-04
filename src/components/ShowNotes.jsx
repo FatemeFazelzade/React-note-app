@@ -1,8 +1,8 @@
-function ShowNotes({ notes }) {
+function ShowNotes({ notes, onDelete }) {
   return (
     <div className="grid-3">
       <ShowNotesNav />
-      <NoteList notes={notes} />
+      <NoteList notes={notes} onDelete={onDelete} />
     </div>
   );
 }
@@ -21,7 +21,7 @@ function ShowNotesNav() {
   );
 }
 
-function NoteList({ notes }) {
+function NoteList({ notes, onDelete }) {
   if (notes.length === 0) {
     return <p className="empty">Write your first note!</p>;
   }
@@ -34,13 +34,13 @@ function NoteList({ notes }) {
       </div>
       <div className="note-card__details">
         <input type="checkbox" />
-        <span>
+        <button className="note-card__delete" onClick={() => onDelete(note.id)}>
           <img
             className="icon-trash"
             src="/images/trash.svg"
             alt="trash svg icon"
           />
-        </span>
+        </button>
       </div>
     </div>
   ));
