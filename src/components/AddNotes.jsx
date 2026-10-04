@@ -1,17 +1,21 @@
 import { useState } from "react";
 
-function AddNotes() {
+function AddNotes({ setNotes }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!title || !description) return;
+
     const newNote = {
       title,
       description,
-      id: Date.now,
+      id: Date.now(),
       completed: false,
-      createdAt: new Date().toISOString,
+      createdAt: new Date().toISOString(),
     };
+    setNotes((prevNotes) => [...prevNotes, newNote]);
     setTitle("");
     setDescription("");
   };

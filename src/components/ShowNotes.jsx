@@ -1,7 +1,8 @@
-function ShowNotes() {
+function ShowNotes({ notes }) {
   return (
     <div className="grid-3">
       <ShowNotesNav />
+      <NoteList notes={notes} />
     </div>
   );
 }
@@ -16,23 +17,31 @@ function ShowNotesNav() {
         <li className="tab-item">Completed</li>
         <li className="tab-item">Open</li>
       </ul>
-      <div className="note-card">
-        <div className="note-card__body">
-          <h3>Doctor's appointment</h3>
-          <p>Rmember to take your ID card!</p>
-          <div className="date">Jan 13, 2026</div>
-        </div>
-        <div className="note-card__details">
-          <input type="checkbox"></input>
-          <span>
-            <img
-              className="icon-trash"
-              src="/images/trash.svg"
-              alt="trash svg icon"
-            />
-          </span>
-        </div>
-      </div>
     </div>
   );
+}
+
+function NoteList({ notes }) {
+  if (notes.length === 0) {
+    return <p className="empty">Write your first note!</p>;
+  }
+  return notes.map((note) => (
+    <div className="note-card" key={note.id}>
+      <div className="note-card__body">
+        <h3>{note.title}</h3>
+        <p>{note.description}</p>
+        <div className="date">{new Date(note.createdAt).toDateString()}</div>
+      </div>
+      <div className="note-card__details">
+        <input type="checkbox" />
+        <span>
+          <img
+            className="icon-trash"
+            src="/images/trash.svg"
+            alt="trash svg icon"
+          />
+        </span>
+      </div>
+    </div>
+  ));
 }

@@ -129,3 +129,7 @@ select:focus {
   filter: invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg)
     brightness(104%) contrast(97%);
 }
+
+.empty {
+  margin: 8rem 11rem;
+}
