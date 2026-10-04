@@ -11,7 +11,7 @@
   align-items: center;
   justify-content: space-evenly;
   margin-bottom: rem;
-  border-bottom: 1px solid #94a3b8;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.49);
 }
 
 .grid-2 {
@@ -104,6 +104,11 @@ select:focus {
 .note-card:focus {
   transition: 0.4s;
   background-color: #f0eeee;
+}
+.note-card.completed h3,
+.note-card.completed p {
+  color: rgba(64, 60, 60, 0.77);
+  text-decoration: line-through;
 }
 
 .note-card__details {

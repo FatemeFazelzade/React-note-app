@@ -1,8 +1,8 @@
-function ShowNotes({ notes, onDelete }) {
+function ShowNotes({ notes, onDelete, onComplete }) {
   return (
     <div className="grid-3">
       <ShowNotesNav />
-      <NoteList notes={notes} onDelete={onDelete} />
+      <NoteList notes={notes} onDelete={onDelete} onComplete={onComplete} />
     </div>
   );
 }
@@ -21,27 +21,46 @@ function ShowNotesNav() {
   );
 }
 
-function NoteList({ notes, onDelete }) {
+function NoteList({ notes, onDelete, onComplete }) {
   if (notes.length === 0) {
     return <p className="empty">Write your first note!</p>;
   }
-  return notes.map((note) => (
-    <div className="note-card" key={note.id}>
-      <div className="note-card__body">
-        <h3>{note.title}</h3>
-        <p>{note.description}</p>
-        <div className="date">{new Date(note.createdAt).toDateString()}</div>
-      </div>
-      <div className="note-card__details">
-        <input type="checkbox" />
-        <button className="note-card__delete" onClick={() => onDelete(note.id)}>
-          <img
-            className="icon-trash"
-            src="/images/trash.svg"
-            alt="trash svg icon"
-          />
-        </button>
-      </div>
+  return (
+    <div className="note-list">
+      {notes.map((note) => (
+        <div
+          className={`note-card ${note.completed ? "completed" : ""}`}
+          key={note.id}
+        >
+          <div className="note-card__body">
+            <h3>{note.title}</h3>
+            <p>{note.description}</p>
+            <div className="date">
+              {new Date(note.createdAt).toDateString()}
+            </div>
+          </div>
+          <div className="note-card__details">
+            <input
+              type="checkbox"
+              name={note.id}
+              id={note.id}
+              value={note.id}
+              checked={note.completed}
+              onChange={onComplete}
+            />
+            <button
+              className="note-card__delete"
+              onClick={() => onDelete(note.id)}
+            >
+              <img
+                className="icon-trash"
+                src="/images/trash.svg"
+                alt="trash svg icon"
+              />
+            </button>
+          </div>
+        </div>
+      ))}
     </div>
-  ));
+  );
 }
