@@ -21,7 +21,7 @@ function AddNotes({ setNotes }) {
   };
 
   return (
-    <div className="grid-3">
+    <div className="grid-2">
       <form className="search" onSubmit={handleSubmit}>
         <h2>Add new notes</h2>
         <input
