@@ -10,6 +10,7 @@
   max-width: 1400px;
   margin: 0 auto;
   padding: var(--space-lg) var(--space-md);
+  box-sizing: border-box;
 }
 
 .grid-1 {
@@ -69,8 +70,9 @@ select:focus-visible {
   justify-content: space-between;
   gap: var(--space-xs);
   width: 100%;
-  margin: 0 1vw var(--space-lg);
+  margin: 0 0 var(--space-lg);
   padding: 4px;
+  box-sizing: border-box;
   background: var(--color-surface-hover);
   border-radius: var(--radius-pill);
   list-style: none;
@@ -189,10 +191,14 @@ select:focus-visible {
 
 .note-card {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
   gap: var(--space-md);
+  width: 100%;
   min-width: 0;
   padding: var(--space-lg);
+  box-sizing: border-box;
   background: var(--color-surface-hover);
   border: 1px solid transparent;
   border-radius: var(--radius-lg);
@@ -208,9 +214,12 @@ select:focus-visible {
 
 .note-card__body {
   display: flex;
+  flex: 1;
   flex-direction: column;
+  align-items: flex-start;
   gap: var(--space-sm);
   min-width: 0;
+  text-align: left;
 }
 
 .note-card__body h3 {
@@ -227,16 +236,7 @@ select:focus-visible {
   overflow-wrap: anywhere;
 }
 
-.note-card__details {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: var(--space-sm);
-  margin-top: auto;
-}
-
-.date {
+.note-card__body .date {
   font-size: 0.85rem;
   color: var(--color-text-muted);
 }
@@ -247,9 +247,20 @@ select:focus-visible {
   text-decoration: line-through;
 }
 
+.note-card__details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--space-lg);
+  flex-shrink: 0;
+  margin: 0;
+}
+
 input[type="checkbox"] {
   width: 1.15rem;
   height: 1.15rem;
+  margin: 0;
   flex-shrink: 0;
   accent-color: var(--color-primary);
   cursor: pointer;
@@ -283,8 +294,10 @@ input[type="checkbox"] {
 }
 
 .icon-trash {
+  display: block;
   width: 1.25rem;
   height: 1.25rem;
+  object-fit: contain;
 }
 
 .empty {
@@ -324,7 +337,17 @@ input[type="checkbox"] {
   }
 
   .note-card {
+    gap: var(--space-sm);
     padding: var(--space-md);
+  }
+
+  .note-card__details {
+    gap: 0.25rem;
+  }
+
+  .note-card__delete {
+    width: 2rem;
+    height: 2rem;
   }
 }
 
