@@ -11,7 +11,6 @@ function Header({ notes, sortBy, onSort }) {
           value={sortBy}
           onChange={onSort}
         >
-          <option value="Sort">Sort:</option>
           <option value="latest">Sort based on latest</option>
           <option value="earliest">Sort based on earliest</option>
           <option value="completed">Sort based on completed</option>

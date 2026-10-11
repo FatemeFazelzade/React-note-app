@@ -20,24 +20,33 @@ function App() {
       ),
     );
   };
+
   let sortedNotes = notes;
   if (sortBy === "earliest")
     sortedNotes = [...notes].sort(
       (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
     );
+
   if (sortBy === "latest")
     sortedNotes = [...notes].sort(
       (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
     );
 
   if (sortBy === "completed")
-    sortedNotes = [...notes].sort((a, b) => a.completed - b.completed);
+    sortedNotes = [...notes].sort(
+      (a, b) => Number(a.completed) - Number(b.completed),
+    );
+
   return (
     <div className="layout">
-      <Header notes={notes} setSortBy={setSortBy} />
+      <Header
+        notes={sortedNotes}
+        sortBy={sortBy}
+        onSort={(e) => setSortBy(e.target.value)}
+      />
       <AddNotes setNotes={setNotes} onSort={(e) => setSortBy(e.target.value)} />
       <ShowNotes
-        notes={notes}
+        notes={sortedNotes}
         onDelete={handleDeleteNote}
         onComplete={handleCompleteNotes}
       />
