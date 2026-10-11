@@ -1,7 +1,7 @@
 function ShowNotes({ notes, onDelete, onComplete }) {
   return (
     <div className="grid-3">
-      <ShowNotesNav />
+      <ShowNotesNav notes={notes} />
       <NoteList notes={notes} onDelete={onDelete} onComplete={onComplete} />
     </div>
   );
@@ -9,13 +9,23 @@ function ShowNotes({ notes, onDelete, onComplete }) {
 
 export default ShowNotes;
 
-function ShowNotesNav() {
+function ShowNotesNav({ notes }) {
+  const allNotes = notes.length;
+  const completedNotes = notes.filter((n) => n.completed).length;
+  const openNotes = allNotes - completedNotes;
+
   return (
     <div>
       <ul className="tab">
-        <li className="tab-item">All</li>
-        <li className="tab-item">Completed</li>
-        <li className="tab-item">Open</li>
+        <li className="tab-item">
+          All ⭐️ <span>{allNotes}</span>
+        </li>
+        <li className="tab-item">
+          Completed ✅ <span>{completedNotes}</span>
+        </li>
+        <li className="tab-item">
+          Open 📖 <span>{openNotes}</span>
+        </li>
       </ul>
     </div>
   );
@@ -46,7 +56,7 @@ function NoteList({ notes, onDelete, onComplete }) {
               id={note.id}
               value={note.id}
               checked={note.completed}
-              onChange={onComplete}
+              onChange={() => onComplete(note.id)}
             />
             <button
               className="note-card__delete"
