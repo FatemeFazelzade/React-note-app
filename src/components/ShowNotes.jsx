@@ -1,3 +1,5 @@
+import Message from "./Message";
+
 function ShowNotes({ notes, onDelete, onComplete }) {
   return (
     <div className="grid-3">
@@ -14,6 +16,7 @@ function ShowNotesNav({ notes }) {
   const completedNotes = notes.filter((n) => n.completed).length;
   const openNotes = allNotes - completedNotes;
 
+  if (!allNotes) return <Message>ℹ️ No notes has been added yet!</Message>;
   return (
     <div>
       <ul className="tab">
