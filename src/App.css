@@ -380,3 +380,170 @@ input[type="checkbox"] {
     min-width: 0;
   }
 }
+
+/* Authentication page */
+
+.auth-container {
+  width: min(100% - 2rem, 420px);
+  margin: 5rem auto;
+  padding: 2.5rem;
+  background-color: var(--color-white, #ffffff);
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgb(0 0 0 / 6%);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.auth-container h2 {
+  margin: 0 0 0.5rem;
+  text-align: center;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-text, #222222);
+}
+
+.auth-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.auth-container label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text, #333333);
+}
+
+.auth-container input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  font: inherit;
+  font-size: 0.95rem;
+  color: var(--color-text, #222222);
+  background-color: var(--color-background, #ffffff);
+  border: 1px solid var(--color-border, #d1d5db);
+  border-radius: 8px;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.auth-container input:focus {
+  border-color: var(--color-primary, #6366f1);
+  box-shadow: 0 0 0 3px rgb(99 102 241 / 15%);
+}
+
+.auth-container form button {
+  margin-top: 0.75rem;
+  padding: 0.9rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--color-primary, #6366f1);
+  color: #ffffff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.auth-container form button:hover:not(:disabled) {
+  background-color: var(--color-primary-dark, #4f46e5);
+  transform: translateY(-1px);
+}
+
+.auth-container button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.auth-container > button {
+  padding: 0.25rem;
+  border: none;
+  background: none;
+  color: var(--color-primary, #6366f1);
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.auth-container > button:hover {
+  color: var(--color-primary-dark, #4f46e5);
+  text-decoration: underline;
+}
+
+.auth-container p {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.auth-container p[role="alert"] {
+  color: #dc2626;
+}
+
+.auth-container p[role="status"] {
+  color: #15803d;
+}
+
+/* Mobile */
+
+@media (max-width: 480px) {
+  .auth-container {
+    margin: 2rem auto;
+    padding: 1.5rem;
+    border-radius: 12px;
+  }
+
+  .auth-container h2 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Log out button */
+.layout > button {
+  justify-self: end;
+  align-self: center;
+  padding: 0.65rem 1.1rem;
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 8px;
+  background-color: transparent;
+  color: var(--color-text, #374151);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.layout > button:hover {
+  background-color: #fef2f2;
+  border-color: #fecaca;
+  color: #dc2626;
+}
+
+.layout > button:focus-visible {
+  outline: 2px solid var(--color-primary, #6366f1);
+  outline-offset: 3px;
+}
+
+.layout > button:active {
+  transform: scale(0.98);
+}
+
+@media (max-width: 600px) {
+  .layout > button {
+    justify-self: stretch;
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+}
