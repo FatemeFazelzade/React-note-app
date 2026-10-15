@@ -15,34 +15,25 @@ function App() {
   const [notesLoading, setNotesLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Check authentication and listen for login/logout changes
+  // بررسی وضعیت احراز هویت بدون ایجاد تداخل با getSession
   useEffect(() => {
-    let mounted = true;
-
-    supabase.auth.getSession().then(({ data, error }) => {
-      if (!mounted) return;
-
-      if (error) setError(error.message);
-
-      setSession(data?.session ?? null);
-      setAuthLoading(false);
-    });
-
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
+      setAuthLoading(false);
     });
 
     return () => {
-      mounted = false;
       subscription.unsubscribe();
     };
   }, []);
 
-  // Fetch notes belonging to the authenticated user
+  // دریافت نوت‌ها - فقط زمانی که userId کاربر تغییر کند اجرا می‌شود
   useEffect(() => {
-    if (!session?.user) {
+    const userId = session?.user?.id;
+
+    if (!userId) {
       setNotes([]);
       return;
     }
@@ -56,7 +47,7 @@ function App() {
       const { data, error } = await supabase
         .from("notes")
         .select("*")
-        .eq("user_id", session.user.id)
+        .eq("user_id", userId)
         .order("created_at", { ascending: false });
 
       if (cancelled) return;
@@ -80,10 +71,12 @@ function App() {
     return () => {
       cancelled = true;
     };
-  }, [session]);
+  }, [session?.user?.id]); // تغییر مهم: وابستگی به شناسه کاربر به جای کل آبجکت session
 
-  // Delete a note from Supabase
+  // حذف نوت
   const handleDeleteNote = async (id) => {
+    if (!session?.user?.id) return;
+
     const { error } = await supabase
       .from("notes")
       .delete()
@@ -98,8 +91,10 @@ function App() {
     setNotes((prev) => prev.filter((note) => note.id !== id));
   };
 
-  // Toggle completion in Supabase
+  // تغییر وضعیت انجام نوت
   const handleCompleteNotes = async (id) => {
+    if (!session?.user?.id) return;
+
     const note = notes.find((item) => item.id === id);
     if (!note) return;
 

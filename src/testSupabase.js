@@ -1,15 +1,17 @@
-import { supabase } from "./lib/supabaseClient";
+import { createClient } from "@supabase/supabase-js";
 
-export async function testSupabaseConnection() {
-  const { data, error } = await supabase
-    .from("connection_test")
-    .select("message")
-    .limit(1);
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
 
-  if (error) {
-    console.error("Supabase connection failed:", error.message);
-    return;
-  }
-
-  console.log("Supabase connection successful:", data);
+if (!supabaseUrl || !supabaseKey) {
+  throw new Error("Missing Supabase environment variables.");
 }
+
+export const supabase = createClient(supabaseUrl, supabaseKey, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true,
+    storage: window.localStorage,
+  },
+});
