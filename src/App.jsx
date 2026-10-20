@@ -15,7 +15,6 @@ function App() {
   const [notesLoading, setNotesLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // بررسی وضعیت احراز هویت بدون ایجاد تداخل با getSession
   useEffect(() => {
     const {
       data: { subscription },
@@ -29,7 +28,6 @@ function App() {
     };
   }, []);
 
-  // دریافت نوت‌ها - فقط زمانی که userId کاربر تغییر کند اجرا می‌شود
   useEffect(() => {
     const userId = session?.user?.id;
 
@@ -71,9 +69,8 @@ function App() {
     return () => {
       cancelled = true;
     };
-  }, [session?.user?.id]); // تغییر مهم: وابستگی به شناسه کاربر به جای کل آبجکت session
+  }, [session?.user?.id]);
 
-  // حذف نوت
   const handleDeleteNote = async (id) => {
     if (!session?.user?.id) return;
 
@@ -91,7 +88,6 @@ function App() {
     setNotes((prev) => prev.filter((note) => note.id !== id));
   };
 
-  // تغییر وضعیت انجام نوت
   const handleCompleteNotes = async (id) => {
     if (!session?.user?.id) return;
 

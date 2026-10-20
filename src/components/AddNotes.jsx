@@ -1,9 +1,19 @@
 import { useState } from "react";
 import { supabase } from "../lib/supabaseClient";
 
+const NOTE_COLORS = [
+  "#ffffff",
+  "#fef08a",
+  "#bbf7d0",
+  "#bae6fd",
+  "#fed7aa",
+  "#fbcfe8",
+];
+
 function AddNotes({ setNotes }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [color, setColor] = useState(NOTE_COLORS[0]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -33,6 +43,7 @@ function AddNotes({ setNotes }) {
           user_id: user.id,
           title: title.trim(),
           description: description.trim(),
+          color: color,
         })
         .select()
         .single();
@@ -48,6 +59,7 @@ function AddNotes({ setNotes }) {
 
       setTitle("");
       setDescription("");
+      setColor(NOTE_COLORS[0]);
     } catch (err) {
       setError(err.message || "Failed to add note.");
     } finally {
@@ -77,6 +89,22 @@ function AddNotes({ setNotes }) {
           className="search__input body"
           required
         />
+
+        <div className="color-picker">
+          <span className="color-picker__label">Pick a color:</span>
+          <div className="color-picker__palette">
+            {NOTE_COLORS.map((c) => (
+              <button
+                key={c}
+                type="button"
+                className={`color-picker__swatch ${color === c ? "active" : ""}`}
+                style={{ backgroundColor: c }}
+                onClick={() => setColor(c)}
+                aria-label={`Select color ${c}`}
+              />
+            ))}
+          </div>
+        </div>
 
         <button type="submit" className="search__button" disabled={loading}>
           {loading ? "Adding..." : "Add note"}
