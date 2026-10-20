@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 function Header({ notes, sortBy, onSort }) {
   return (
     <div className="grid-1">

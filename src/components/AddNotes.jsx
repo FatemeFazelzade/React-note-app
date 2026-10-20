@@ -4,10 +4,10 @@ import { supabase } from "../lib/supabaseClient";
 const NOTE_COLORS = [
   "#ffffff",
   "#fef08a",
-  "#bbf7d0",
-  "#bae6fd",
-  "#fed7aa",
-  "#fbcfe8",
+  "#86efac",
+  "#7dd3fc",
+  "#fdba74",
+  "#f472b6",
 ];
 
 function AddNotes({ setNotes }) {

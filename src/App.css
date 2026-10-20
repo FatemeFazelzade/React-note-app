@@ -205,6 +205,8 @@ select:focus-visible {
   transition:
     background var(--duration) var(--ease),
     box-shadow var(--duration) var(--ease);
+
+  background-color: var(--color-surface);
 }
 
 .note-card:hover {
@@ -309,6 +311,60 @@ input[type="checkbox"] {
   margin: 3rem auto;
   color: var(--color-text-muted);
   text-align: center;
+}
+
+/* خوانایی متن روی کارت‌های رنگی (لایت‌مود پیش‌فرض) */
+.note-card {
+  color: #1e293b;
+}
+
+.note-card .note-card__body h3 {
+  color: #0f172a;
+}
+
+.note-card .note-card__body p {
+  color: #334155;
+}
+
+.note-card .note-card__body .date {
+  color: #64748b;
+}
+
+.note-card .icon-trash {
+  filter: brightness(0) opacity(0.75);
+}
+
+.note-card .note-card__delete:hover .icon-trash {
+  filter: brightness(0) opacity(1);
+}
+
+/* تنظیمات ویژه خوانایی متن روی کارت‌ها در دارک‌مود */
+@media (prefers-color-scheme: dark) {
+  .note-card {
+    color: #1e293b !important;
+  }
+  .note-card .note-card__body h3 {
+    color: #0f172a !important;
+  }
+  .note-card .note-card__body p {
+    color: #334155 !important;
+  }
+  .note-card .note-card__body .date {
+    color: #475569 !important;
+  }
+}
+
+[data-theme="dark"] .note-card {
+  color: #1e293b !important;
+}
+[data-theme="dark"] .note-card .note-card__body h3 {
+  color: #0f172a !important;
+}
+[data-theme="dark"] .note-card .note-card__body p {
+  color: #334155 !important;
+}
+[data-theme="dark"] .note-card .note-card__body .date {
+  color: #475569 !important;
 }
 
 @media (max-width: 599px) {
@@ -490,8 +546,6 @@ input[type="checkbox"] {
 .auth-container p[role="status"] {
   color: #15803d;
 }
-
-/* Mobile */
 
 @media (max-width: 480px) {
   .auth-container {
@@ -734,35 +788,41 @@ input[type="checkbox"] {
     padding: 0.75rem 1rem;
   }
 }
+
+/* Color Picker (Fixed for dark mode visibility & active states) */
 .color-picker {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  margin: 0.5rem 0;
+  margin: 0.75rem 0;
 }
 
 .color-picker__label {
   font-size: 0.85rem;
   font-weight: 500;
-  color: var(--color-text-muted, #666);
+  color: var(--color-text-muted, #94a3b8);
 }
 
 .color-picker__palette {
   display: flex;
-  gap: 0.5rem;
+  align-items: center;
+  gap: 0.6rem;
 }
 
 .color-picker__swatch {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  border: 1.5px solid #d1d5db;
+  border: 2px solid rgba(255, 255, 255, 0.2);
   cursor: pointer;
   padding: 0;
+  box-sizing: border-box;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   transition:
     transform 0.15s ease,
-    border-color 0.15s ease;
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .color-picker__swatch:hover {
@@ -770,7 +830,7 @@ input[type="checkbox"] {
 }
 
 .color-picker__swatch.active {
-  border-color: #111827;
   transform: scale(1.2);
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.15);
+  border-color: #ffffff;
+  box-shadow: 0 0 0 2px var(--color-primary, #6366f1);
 }

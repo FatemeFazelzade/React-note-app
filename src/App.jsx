@@ -9,7 +9,7 @@ import { supabase } from "./lib/supabaseClient";
 
 function App() {
   const [notes, setNotes] = useState([]);
-  const [sortBy, setSortBy] = useState("latest");
+  const [sortBy, setSortBy] = useState("completed");
   const [session, setSession] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [notesLoading, setNotesLoading] = useState(false);
