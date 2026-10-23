@@ -4,6 +4,7 @@ import "./App.css";
 import AddNotes from "./components/AddNotes";
 import Header from "./components/Header";
 import ShowNotes from "./components/ShowNotes";
+import UpdateModal from "./components/UpdateModal";
 import Auth from "./components/Auth";
 import { supabase } from "./lib/supabaseClient";
 
@@ -138,6 +139,7 @@ function App() {
 
   return (
     <div className="layout">
+      <UpdateModal />
       <Header
         notes={sortedNotes}
         sortBy={sortBy}

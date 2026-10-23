@@ -81,15 +81,23 @@ function AddNotes({ setNotes }) {
           required
         />
 
-        <input
-          type="text"
+        <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Write your description"
           className="search__input body"
+          rows={4}
           required
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
+              e.preventDefault();
+              handleSubmit(e);
+            }
+          }}
         />
-
+        <small className="description-hint" dir="ltr">
+          Press <kbd>Ctrl + Enter</kbd> to add your note
+        </small>
         <div className="color-picker">
           <span className="color-picker__label">Pick a color:</span>
           <div className="color-picker__palette">

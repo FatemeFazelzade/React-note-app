@@ -1,3 +1,17 @@
+@import url("https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap");
+
+:root {
+  color-scheme: light dark;
+}
+
+body {
+  font-family:
+    "Vazirmatn",
+    system-ui,
+    -apple-src,
+    sans-serif;
+}
+
 .layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -342,9 +356,10 @@ input[type="checkbox"] {
   filter: brightness(0) opacity(1);
 }
 
-/* تنظیمات ویژه خوانایی متن روی کارت‌ها در دارک‌مود */
+/* تنظیمات ویژه خوانایی و جلوگیری از خیرگی چشم در دارک‌مود */
 @media (prefers-color-scheme: dark) {
   .note-card {
+    filter: brightness(0.85) contrast(0.95);
     color: #1e293b !important;
   }
   .note-card .note-card__body h3 {
@@ -359,6 +374,7 @@ input[type="checkbox"] {
 }
 
 [data-theme="dark"] .note-card {
+  filter: brightness(0.85) contrast(0.95);
   color: #1e293b !important;
 }
 [data-theme="dark"] .note-card .note-card__body h3 {
@@ -837,4 +853,21 @@ input[type="checkbox"] {
   transform: scale(1.2);
   border-color: #ffffff;
   box-shadow: 0 0 0 2px var(--color-primary, #6366f1);
+}
+.description-hint {
+  display: block;
+  margin-top: 0.4rem;
+  color: #64748b;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.description-hint kbd {
+  direction: ltr;
+  unicode-bidi: isolate;
+  padding: 0.1rem 0.35rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  font: inherit;
+  font-size: 0.75rem;
 }

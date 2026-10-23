@@ -1,4 +1,6 @@
 :root {
+  color-scheme: light dark;
+
   --color-bg: #f8fafc;
   --color-surface: #ffffff;
   --color-surface-hover: #f1f5f9;
