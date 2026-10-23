@@ -88,7 +88,15 @@ function NoteList({ notes, onRequestDelete, onComplete }) {
         >
           <div className="note-card__body">
             <h3>{note.title}</h3>
-            <p>{note.description}</p>
+            <p>
+              {note.description.split(/\r?\n/).map((line, index, arr) => (
+                <span key={index}>
+                  {line}
+                  {index < arr.length - 1 && <br />}
+                </span>
+              ))}
+            </p>
+
             <div className="date">
               {new Date(note.createdAt).toDateString()}
             </div>

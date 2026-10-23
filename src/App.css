@@ -253,6 +253,12 @@ select:focus-visible {
   margin: 0;
   line-height: 1.6;
   overflow-wrap: anywhere;
+  white-space: pre-line;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .note-card__body .date {
