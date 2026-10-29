@@ -6,6 +6,7 @@ import Header from "./components/Header";
 import ShowNotes from "./components/ShowNotes";
 import UpdateModal from "./components/UpdateModal";
 import Auth from "./components/Auth";
+import EditModal from "./components/EditModal"; // ✅ اضافه شد
 import { supabase } from "./lib/supabaseClient";
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
   const [authLoading, setAuthLoading] = useState(true);
   const [notesLoading, setNotesLoading] = useState(false);
   const [error, setError] = useState("");
+  const [editingNote, setEditingNote] = useState(null); // ✅ کنترل مودال ادیت
 
   useEffect(() => {
     const {
@@ -86,6 +88,9 @@ function App() {
       return;
     }
 
+    // اگر همون نوتی که در حال ادیت بود حذف شد، مودال رو ببند
+    setEditingNote((prev) => (prev?.id === id ? null : prev));
+
     setNotes((prev) => prev.filter((note) => note.id !== id));
   };
 
@@ -113,6 +118,42 @@ function App() {
         item.id === id ? { ...data, createdAt: data.created_at } : item,
       ),
     );
+
+    // اگر نوت در حال ادیت همون بود، داخل مودال هم آپدیتش کن
+    setEditingNote((prev) =>
+      prev?.id === id ? { ...data, createdAt: data.created_at } : prev,
+    );
+  };
+
+  const handleUpdateNote = async ({ id, title, description, color }) => {
+    if (!session?.user?.id) return;
+
+    setError("");
+
+    const { data, error } = await supabase
+      .from("notes")
+      .update({
+        title: title.trim(),
+        description: description.trim(),
+        color,
+      })
+      .eq("id", id)
+      .eq("user_id", session.user.id)
+      .select()
+      .single();
+
+    if (error) {
+      setError(error.message);
+      return;
+    }
+
+    setNotes((prev) =>
+      prev.map((n) =>
+        n.id === id ? { ...data, createdAt: data.created_at } : n,
+      ),
+    );
+
+    setEditingNote(null); // ✅ بعد از ذخیره، مودال بسته شود
   };
 
   let sortedNotes = [...notes];
@@ -140,6 +181,7 @@ function App() {
   return (
     <div className="layout">
       <UpdateModal />
+
       <Header
         notes={sortedNotes}
         sortBy={sortBy}
@@ -152,22 +194,25 @@ function App() {
         <p>Loading notes...</p>
       ) : (
         <>
-          <AddNotes
-            setNotes={setNotes}
-            onSort={(e) => setSortBy(e.target.value)}
-          />
+          <AddNotes setNotes={setNotes} />
 
           <ShowNotes
             notes={sortedNotes}
             onDelete={handleDeleteNote}
             onComplete={handleCompleteNotes}
+            onEdit={(note) => setEditingNote(note)}
+            onEditNote={(note) => setEditingNote(note)}
           />
         </>
       )}
 
-      <button type="button" onClick={() => supabase.auth.signOut()}>
-        Log out
-      </button>
+      {editingNote && (
+        <EditModal
+          editingNote={editingNote}
+          onSave={handleUpdateNote}
+          onCancel={() => setEditingNote(null)}
+        />
+      )}
     </div>
   );
 }

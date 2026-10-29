@@ -1,8 +1,9 @@
 import { useState } from "react";
 import Message from "./Message";
 import Modal from "./Modal";
+import { Pencil, Trash2, Check } from "lucide-react";
 
-function ShowNotes({ notes, onDelete, onComplete }) {
+function ShowNotes({ notes, onDelete, onComplete, onEdit }) {
   const [selectedNoteId, setSelectedNoteId] = useState(null);
 
   function handleCloseModal() {
@@ -19,11 +20,14 @@ function ShowNotes({ notes, onDelete, onComplete }) {
   return (
     <div className="grid-3">
       <ShowNotesNav notes={notes} />
+
       <NoteList
         notes={notes}
         onRequestDelete={(id) => setSelectedNoteId(id)}
         onComplete={onComplete}
+        onEdit={onEdit}
       />
+
       <Modal
         isOpen={Boolean(selectedNoteId)}
         onClose={handleCloseModal}
@@ -51,15 +55,18 @@ export default ShowNotes;
 
 function ShowNotesNav({ notes }) {
   const allNotes = notes.length;
-  const completedNotes = notes.filter((n) => n.completed).length;
+  const completedNotes = notes.filter((note) => note.completed).length;
   const openNotes = allNotes - completedNotes;
 
-  if (!allNotes) return <Message>ℹ️ No notes has been added yet!</Message>;
+  // پیام اول حالت خالی (سر جای خودش در بخش آمار)
+  if (!allNotes) {
+    return <Message>ℹ️ No notes has been added yet!</Message>;
+  }
 
   return (
     <div>
       <ul className="tab">
-        <li className="tab-item">
+        <li className="tab-item active">
           All ⭐️ <span>{allNotes}</span>
         </li>
         <li className="tab-item">
@@ -73,9 +80,10 @@ function ShowNotesNav({ notes }) {
   );
 }
 
-function NoteList({ notes, onRequestDelete, onComplete }) {
+function NoteList({ notes, onRequestDelete, onComplete, onEdit }) {
+  // پیام دوم حالت خالی (سر جای خودش در بخش لیست نوت‌ها)
   if (notes.length === 0) {
-    return <p className="empty">Write your first note!</p>;
+    return <p className="empty">Write your first note! 📝</p>;
   }
 
   return (
@@ -84,8 +92,25 @@ function NoteList({ notes, onRequestDelete, onComplete }) {
         <div
           className={`note-card ${note.completed ? "completed" : ""}`}
           key={note.id}
-          style={{ backgroundColor: note.color || "#f1f5f9" }}
         >
+          {/* نوار رنگی عمودی: سمت راست */}
+          <span
+            className="note-card__stripe"
+            style={{ backgroundColor: note.color || "#6366f1" }}
+          />
+
+          {/* ردیف بالا: چک‌باکس در گوشه بالا راست */}
+          <div className="note-card__top">
+            <button
+              type="button"
+              className={`check-btn ${note.completed ? "checked" : ""}`}
+              onClick={() => onComplete(note.id)}
+              aria-label="Toggle completed"
+            >
+              {note.completed && <Check size={12} strokeWidth={3} />}
+            </button>
+          </div>
+
           <div className="note-card__body">
             <h3>{note.title}</h3>
             <p>
@@ -96,30 +121,37 @@ function NoteList({ notes, onRequestDelete, onComplete }) {
                 </span>
               ))}
             </p>
-
-            <div className="date">
-              {new Date(note.createdAt).toDateString()}
-            </div>
           </div>
-          <div className="note-card__details">
-            <input
-              type="checkbox"
-              name={String(note.id)}
-              id={String(note.id)}
-              checked={note.completed}
-              onChange={() => onComplete(note.id)}
-            />
-            <button
-              className="note-card__delete"
-              onClick={() => onRequestDelete(note.id)}
-              aria-label="Delete note"
-            >
-              <img
-                className="icon-trash"
-                src="/images/trash.svg"
-                alt="trash svg icon"
-              />
-            </button>
+
+          <div className="note-card__footer">
+            <span className="date">
+              {new Date(note.createdAt).toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+              })}
+            </span>
+
+            {/* دکمه‌های اکشن: حذف (سمت چپ) و ویرایش (سمت راستِ آن) */}
+            <div className="card-actions">
+              <button
+                type="button"
+                className="icon-action-btn btn-delete"
+                onClick={() => onRequestDelete(note.id)}
+                aria-label="Delete note"
+                title="Delete note"
+              >
+                <Trash2 size={16} />
+              </button>
+
+              <button
+                type="button"
+                className="icon-action-btn btn-edit"
+                onClick={() => (onEdit ? onEdit(note) : onEditNote?.(note))}
+                title="Edit note"
+              >
+                <Pencil size={16} />
+              </button>
+            </div>
           </div>
         </div>
       ))}

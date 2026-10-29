@@ -17,6 +17,13 @@ function AddNotes({ setNotes }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const handleResetForm = () => {
+    setTitle("");
+    setDescription("");
+    setColor(NOTE_COLORS[0]);
+    setError("");
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -56,10 +63,7 @@ function AddNotes({ setNotes }) {
       };
 
       setNotes((prevNotes) => [...prevNotes, newNote]);
-
-      setTitle("");
-      setDescription("");
-      setColor(NOTE_COLORS[0]);
+      handleResetForm();
     } catch (err) {
       setError(err.message || "Failed to add note.");
     } finally {
@@ -68,9 +72,11 @@ function AddNotes({ setNotes }) {
   };
 
   return (
-    <div className="grid-2">
+    <div className="grid-2 form-container">
       <form className="search" onSubmit={handleSubmit}>
-        <h2>Add new notes</h2>
+        <div className="form-header">
+          <h2>Add new notes</h2>
+        </div>
 
         <input
           type="text"
@@ -95,9 +101,11 @@ function AddNotes({ setNotes }) {
             }
           }}
         />
+
         <small className="description-hint" dir="ltr">
           Press <kbd>Ctrl + Enter</kbd> to add your note
         </small>
+
         <div className="color-picker">
           <span className="color-picker__label">Pick a color:</span>
           <div className="color-picker__palette">
@@ -114,11 +122,21 @@ function AddNotes({ setNotes }) {
           </div>
         </div>
 
-        <button type="submit" className="search__button" disabled={loading}>
-          {loading ? "Adding..." : "Add note"}
-        </button>
+        <div className="form-action-group">
+          <button
+            type="submit"
+            className="search__button action-btn-submit"
+            disabled={loading}
+          >
+            {loading ? <span>Saving...</span> : <span>Add note</span>}
+          </button>
+        </div>
 
-        {error && <p role="alert">{error}</p>}
+        {error && (
+          <p className="form-error-msg" role="alert">
+            {error}
+          </p>
+        )}
       </form>
     </div>
   );

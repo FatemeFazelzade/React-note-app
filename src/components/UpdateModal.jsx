@@ -22,21 +22,30 @@ function UpdateModal() {
   if (!showModal) return null;
 
   return (
-    <div className="modal-backdrop">
+    <div
+      className="modal-backdrop"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) handleClose();
+      }}
+    >
       <div
         className="modal-box update-modal"
         dir="rtl"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="update-modal-title"
         style={{
           fontFamily: "'Vazirmatn', sans-serif",
           textAlign: "right",
         }}
       >
         <div className="modal-header">
-          <h3 className="modal-title">
+          <h3 id="update-modal-title" className="modal-title">
             ✨ تغییرات جدید در نسخه {CURRENT_VERSION}
           </h3>
 
           <button
+            type="button"
             className="modal-close-btn"
             onClick={handleClose}
             aria-label="بستن"
@@ -46,36 +55,21 @@ function UpdateModal() {
         </div>
 
         <div className="modal-content">
-          <ul
-            style={{
-              paddingRight: "1.25rem",
-              paddingLeft: 0,
-              margin: 0,
-              display: "flex",
-              flexDirection: "column",
-              gap: "0.75rem",
-            }}
-          >
+          <ul className="update-modal__list">
             <li>
-              <b>پشتیبانی از خط جدید در توضیحات:</b> با زدن Enter به خط بعدی
-              بروید و با کلید میانبر <code dir="ltr">Ctrl + Enter</code> یادداشت
-              را ثبت کنید.
+              <b>امکان ویرایش یادداشت‌ها:</b> حالا می‌توانید یادداشت‌های ثبت‌شده
+              خود را به راحتی ویرایش کنید و تغییرات را ذخیره نمایید.
             </li>
 
             <li>
-              <b>پالت رنگی بهینه‌شده:</b> رنگ‌های کارت‌ها برای حالت روشن و تاریک
-              بازطراحی شدند تا ملایم‌تر باشند.
-            </li>
-
-            <li>
-              <b>بهبود تب‌ها:</b> فاصله و اندازه‌ی تب‌ها برای نمایش یکدست در
-              دستگاه‌های مختلف اصلاح شد.
+              <b>بهینه‌سازی رابط کاربری:</b> انتقال دکمه‌ی خروج به هدر برنامه و
+              بهبود ظاهر منوی مرتب‌سازی.
             </li>
           </ul>
         </div>
 
         <div className="modal-actions">
-          <button className="btn-danger" onClick={handleClose}>
+          <button type="button" className="btn-danger" onClick={handleClose}>
             متوجه شدم، عالیه!
           </button>
         </div>
