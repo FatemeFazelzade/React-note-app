@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 
+import { Toaster } from "sonner";
 import AddNotes from "./components/AddNotes";
 import Header from "./components/Header";
 import ShowNotes from "./components/ShowNotes";
 import UpdateModal from "./components/UpdateModal";
 import Auth from "./components/Auth";
-import EditModal from "./components/EditModal"; // ✅ اضافه شد
+import EditModal from "./components/EditModal";
 import { supabase } from "./lib/supabaseClient";
 
 function App() {
@@ -16,7 +17,7 @@ function App() {
   const [authLoading, setAuthLoading] = useState(true);
   const [notesLoading, setNotesLoading] = useState(false);
   const [error, setError] = useState("");
-  const [editingNote, setEditingNote] = useState(null); // ✅ کنترل مودال ادیت
+  const [editingNote, setEditingNote] = useState(null);
 
   useEffect(() => {
     const {
@@ -88,9 +89,7 @@ function App() {
       return;
     }
 
-    // اگر همون نوتی که در حال ادیت بود حذف شد، مودال رو ببند
     setEditingNote((prev) => (prev?.id === id ? null : prev));
-
     setNotes((prev) => prev.filter((note) => note.id !== id));
   };
 
@@ -119,7 +118,6 @@ function App() {
       ),
     );
 
-    // اگر نوت در حال ادیت همون بود، داخل مودال هم آپدیتش کن
     setEditingNote((prev) =>
       prev?.id === id ? { ...data, createdAt: data.created_at } : prev,
     );
@@ -153,7 +151,7 @@ function App() {
       ),
     );
 
-    setEditingNote(null); // ✅ بعد از ذخیره، مودال بسته شود
+    setEditingNote(null);
   };
 
   let sortedNotes = [...notes];
@@ -174,46 +172,50 @@ function App() {
     return <p>Checking your session...</p>;
   }
 
-  if (!session) {
-    return <Auth />;
-  }
-
   return (
-    <div className="layout">
-      <UpdateModal />
+    <>
+      <Toaster position="top-center" richColors closeButton />
 
-      <Header
-        notes={sortedNotes}
-        sortBy={sortBy}
-        onSort={(e) => setSortBy(e.target.value)}
-      />
-
-      {error && <p role="alert">{error}</p>}
-
-      {notesLoading ? (
-        <p>Loading notes...</p>
+      {!session ? (
+        <Auth />
       ) : (
-        <>
-          <AddNotes setNotes={setNotes} />
+        <div className="layout">
+          <UpdateModal />
 
-          <ShowNotes
+          <Header
             notes={sortedNotes}
-            onDelete={handleDeleteNote}
-            onComplete={handleCompleteNotes}
-            onEdit={(note) => setEditingNote(note)}
-            onEditNote={(note) => setEditingNote(note)}
+            sortBy={sortBy}
+            onSort={(e) => setSortBy(e.target.value)}
           />
-        </>
-      )}
 
-      {editingNote && (
-        <EditModal
-          editingNote={editingNote}
-          onSave={handleUpdateNote}
-          onCancel={() => setEditingNote(null)}
-        />
+          {error && <p role="alert">{error}</p>}
+
+          {notesLoading ? (
+            <p>Loading notes...</p>
+          ) : (
+            <>
+              <AddNotes setNotes={setNotes} />
+
+              <ShowNotes
+                notes={sortedNotes}
+                onDelete={handleDeleteNote}
+                onComplete={handleCompleteNotes}
+                onEdit={(note) => setEditingNote(note)}
+                onEditNote={(note) => setEditingNote(note)}
+              />
+            </>
+          )}
+
+          {editingNote && (
+            <EditModal
+              editingNote={editingNote}
+              onSave={handleUpdateNote}
+              onCancel={() => setEditingNote(null)}
+            />
+          )}
+        </div>
       )}
-    </div>
+    </>
   );
 }
 
