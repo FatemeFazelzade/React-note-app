@@ -203,6 +203,30 @@ body {
     color var(--duration) var(--ease);
 }
 
+.tab-item.active {
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
+}
+
+.tab-item span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 0.35rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  background-color: var(--color-surface-hover);
+  color: var(--color-text-muted);
+}
+
+.tab-item.active span {
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
 /* Note creation form container */
 .search {
   display: flex;

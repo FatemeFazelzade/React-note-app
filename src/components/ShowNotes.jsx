@@ -1,10 +1,22 @@
-import { useState } from "react";
+import { useState, useReducer } from "react";
 import Message from "./Message";
 import Modal from "./Modal";
 import { Pencil, Trash2, Check } from "lucide-react";
 
+const initialFilterState = { status: "all" };
+
+function filterReducer(state, { type, payload }) {
+  switch (type) {
+    case "SET_STATUS":
+      return { ...state, status: payload };
+    default:
+      return state;
+  }
+}
+
 function ShowNotes({ notes, onDelete, onComplete, onEdit }) {
   const [selectedNoteId, setSelectedNoteId] = useState(null);
+  const [{ status }, dispatch] = useReducer(filterReducer, initialFilterState);
 
   function handleCloseModal() {
     setSelectedNoteId(null);
@@ -17,12 +29,24 @@ function ShowNotes({ notes, onDelete, onComplete, onEdit }) {
     }
   }
 
+  const filteredNotes = notes.filter((note) => {
+    if (status === "completed") return note.completed;
+    if (status === "open") return !note.completed;
+    return true;
+  });
+
   return (
     <div className="grid-3">
-      <ShowNotesNav notes={notes} />
+      <ShowNotesNav
+        notes={notes}
+        status={status}
+        onFilterChange={(newStatus) =>
+          dispatch({ type: "SET_STATUS", payload: newStatus })
+        }
+      />
 
       <NoteList
-        notes={notes}
+        notes={filteredNotes}
         onRequestDelete={(id) => setSelectedNoteId(id)}
         onComplete={onComplete}
         onEdit={onEdit}
@@ -53,12 +77,11 @@ function ShowNotes({ notes, onDelete, onComplete, onEdit }) {
 
 export default ShowNotes;
 
-function ShowNotesNav({ notes }) {
+function ShowNotesNav({ notes, status, onFilterChange }) {
   const allNotes = notes.length;
   const completedNotes = notes.filter((note) => note.completed).length;
   const openNotes = allNotes - completedNotes;
 
-  // پیام اول حالت خالی (سر جای خودش در بخش آمار)
   if (!allNotes) {
     return <Message>ℹ️ No notes has been added yet!</Message>;
   }
@@ -66,13 +89,22 @@ function ShowNotesNav({ notes }) {
   return (
     <div>
       <ul className="tab">
-        <li className="tab-item active">
+        <li
+          className={`tab-item ${status === "all" ? "active" : ""}`}
+          onClick={() => onFilterChange("all")}
+        >
           All ⭐️ <span>{allNotes}</span>
         </li>
-        <li className="tab-item">
+        <li
+          className={`tab-item ${status === "completed" ? "active" : ""}`}
+          onClick={() => onFilterChange("completed")}
+        >
           Completed ✅ <span>{completedNotes}</span>
         </li>
-        <li className="tab-item">
+        <li
+          className={`tab-item ${status === "open" ? "active" : ""}`}
+          onClick={() => onFilterChange("open")}
+        >
           Open 📖 <span>{openNotes}</span>
         </li>
       </ul>
@@ -81,7 +113,6 @@ function ShowNotesNav({ notes }) {
 }
 
 function NoteList({ notes, onRequestDelete, onComplete, onEdit }) {
-  // پیام دوم حالت خالی (سر جای خودش در بخش لیست نوت‌ها)
   if (notes.length === 0) {
     return <p className="empty">Write your first note! 📝</p>;
   }
@@ -93,13 +124,11 @@ function NoteList({ notes, onRequestDelete, onComplete, onEdit }) {
           className={`note-card ${note.completed ? "completed" : ""}`}
           key={note.id}
         >
-          {/* نوار رنگی عمودی: سمت راست */}
           <span
             className="note-card__stripe"
             style={{ backgroundColor: note.color || "#6366f1" }}
           />
 
-          {/* ردیف بالا: چک‌باکس در گوشه بالا راست */}
           <div className="note-card__top">
             <button
               type="button"
@@ -131,7 +160,6 @@ function NoteList({ notes, onRequestDelete, onComplete, onEdit }) {
               })}
             </span>
 
-            {/* دکمه‌های اکشن: حذف (سمت چپ) و ویرایش (سمت راستِ آن) */}
             <div className="card-actions">
               <button
                 type="button"
