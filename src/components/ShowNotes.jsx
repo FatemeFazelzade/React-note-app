@@ -47,6 +47,8 @@ function ShowNotes({ notes, onDelete, onComplete, onEdit }) {
 
       <NoteList
         notes={filteredNotes}
+        status={status}
+        hasAnyNotes={notes.length > 0}
         onRequestDelete={(id) => setSelectedNoteId(id)}
         onComplete={onComplete}
         onEdit={onEdit}
@@ -112,9 +114,26 @@ function ShowNotesNav({ notes, status, onFilterChange }) {
   );
 }
 
-function NoteList({ notes, onRequestDelete, onComplete, onEdit }) {
+function NoteList({
+  notes,
+  onRequestDelete,
+  onComplete,
+  onEdit,
+  status,
+  hasAnyNotes,
+}) {
   if (notes.length === 0) {
-    return <p className="empty">Write your first note! 📝</p>;
+    return (
+      <p className="empty">
+        {!hasAnyNotes
+          ? "Write your first note! 📝"
+          : status === "completed"
+            ? "No completed notes yet."
+            : status === "open"
+              ? "No open notes."
+              : "No notes to show."}
+      </p>
+    );
   }
 
   return (
