@@ -1,50 +1,87 @@
-import { useEffect, useState } from "react";
-import "./App.css";
-
+import { useEffect, useReducer } from "react";
+import supabase from "./supabaseClient";
+import Auth from "./Auth";
+import Header from "./Header";
+import AddNotes from "./AddNotes";
+import ShowNotes from "./ShowNotes";
+import EditModal from "./EditModal";
+import UpdateModal from "./UpdateModal";
 import { Toaster } from "sonner";
-import AddNotes from "./components/AddNotes";
-import Header from "./components/Header";
-import ShowNotes from "./components/ShowNotes";
-import UpdateModal from "./components/UpdateModal";
-import Auth from "./components/Auth";
-import EditModal from "./components/EditModal";
-import { supabase } from "./lib/supabaseClient";
+import {
+  NotesProvider,
+  useNotes,
+  useNotesDispatch,
+} from "./context/NotesContext";
 
-function App() {
-  const [notes, setNotes] = useState([]);
-  const [sortBy, setSortBy] = useState("completed");
-  const [session, setSession] = useState(null);
-  const [authLoading, setAuthLoading] = useState(true);
-  const [notesLoading, setNotesLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [editingNote, setEditingNote] = useState(null);
+const initialState = {
+  sortBy: "completed",
+  session: null,
+  authLoading: true,
+  notesLoading: false,
+  error: "",
+  editingNote: null,
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "SET_SESSION":
+      return { ...state, session: GAPGPTMASKTOKENy6ohi8urpfgX5X };
+
+    case "SET_AUTH_LOADING":
+      return { ...state, authLoading: GAPGPTMASKTOKENy6ohi8urpfgX6X };
+
+    case "SET_NOTES_LOADING":
+      return { ...state, notesLoading: GAPGPTMASKTOKENy6ohi8urpfgX7X };
+
+    case "SET_ERROR":
+      return { ...state, error: GAPGPTMASKTOKENy6ohi8urpfgX8X };
+
+    case "SET_EDITING_NOTE":
+      return { ...state, editingNote: GAPGPTMASKTOKENy6ohi8urpfgX9X };
+
+    case "SET_SORT_BY":
+      return { ...state, sortBy: GAPGPTMASKTOKENy6ohi8urpfgX10X };
+
+    default:
+      return state;
+  }
+}
+
+function AppContent() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const notes = useNotes();
+  const notesDispatch = useNotesDispatch();
+
+  const { sortBy, session, authLoading, notesLoading, error, editingNote } =
+    state;
 
   useEffect(() => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setAuthLoading(false);
+      dispatch({ type: "SET_SESSION", payload: session });
+      dispatch({ type: "SET_AUTH_LOADING", payload: false });
     });
 
-    return () => {
-      subscription.unsubscribe();
-    };
+    return () => subscription.unsubscribe();
   }, []);
 
   useEffect(() => {
     const userId = session?.user?.id;
 
+    notesDispatch({ type: "set", payload: [] });
+
     if (!userId) {
-      setNotes([]);
+      dispatch({ type: "SET_NOTES_LOADING", payload: false });
+      dispatch({ type: "SET_EDITING_NOTE", payload: null });
       return;
     }
 
     let cancelled = false;
 
     async function fetchNotes() {
-      setNotesLoading(true);
-      setError("");
+      dispatch({ type: "SET_NOTES_LOADING", payload: true });
+      dispatch({ type: "SET_ERROR", payload: "" });
 
       const { data, error } = await supabase
         .from("notes")
@@ -55,17 +92,18 @@ function App() {
       if (cancelled) return;
 
       if (error) {
-        setError(error.message);
+        dispatch({ type: "SET_ERROR", payload: error.message });
       } else {
-        setNotes(
-          data.map((note) => ({
+        notesDispatch({
+          type: "set",
+          payload: data.map((note) => ({
             ...note,
             createdAt: note.created_at,
           })),
-        );
+        });
       }
 
-      setNotesLoading(false);
+      dispatch({ type: "SET_NOTES_LOADING", payload: false });
     }
 
     fetchNotes();
@@ -73,7 +111,7 @@ function App() {
     return () => {
       cancelled = true;
     };
-  }, [session?.user?.id]);
+  }, [session?.user?.id, notesDispatch]);
 
   const handleDeleteNote = async (id) => {
     if (!session?.user?.id) return;
@@ -85,12 +123,15 @@ function App() {
       .eq("user_id", session.user.id);
 
     if (error) {
-      setError(error.message);
+      dispatch({ type: "SET_ERROR", payload: error.message });
       return;
     }
 
-    setEditingNote((prev) => (prev?.id === id ? null : prev));
-    setNotes((prev) => prev.filter((note) => note.id !== id));
+    notesDispatch({ type: "delete", payload: id });
+
+    if (editingNote?.id === id) {
+      dispatch({ type: "SET_EDITING_NOTE", payload: null });
+    }
   };
 
   const handleCompleteNotes = async (id) => {
@@ -108,25 +149,23 @@ function App() {
       .single();
 
     if (error) {
-      setError(error.message);
+      dispatch({ type: "SET_ERROR", payload: error.message });
       return;
     }
 
-    setNotes((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...data, createdAt: data.created_at } : item,
-      ),
-    );
+    const updatedNote = { ...data, createdAt: data.created_at };
 
-    setEditingNote((prev) =>
-      prev?.id === id ? { ...data, createdAt: data.created_at } : prev,
-    );
+    notesDispatch({ type: "complete", payload: updatedNote });
+
+    if (editingNote?.id === id) {
+      dispatch({ type: "SET_EDITING_NOTE", payload: updatedNote });
+    }
   };
 
   const handleUpdateNote = async ({ id, title, description, color }) => {
     if (!session?.user?.id) return;
 
-    setError("");
+    dispatch({ type: "SET_ERROR", payload: "" });
 
     const { data, error } = await supabase
       .from("notes")
@@ -141,20 +180,18 @@ function App() {
       .single();
 
     if (error) {
-      setError(error.message);
+      dispatch({ type: "SET_ERROR", payload: error.message });
       return;
     }
 
-    setNotes((prev) =>
-      prev.map((n) =>
-        n.id === id ? { ...data, createdAt: data.created_at } : n,
-      ),
-    );
-
-    setEditingNote(null);
+    notesDispatch({
+      type: "update",
+      payload: { ...data, createdAt: data.created_at },
+    });
+    dispatch({ type: "SET_EDITING_NOTE", payload: null });
   };
 
-  let sortedNotes = [...notes];
+  const sortedNotes = [...notes];
 
   if (sortBy === "earliest") {
     sortedNotes.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
@@ -185,7 +222,9 @@ function App() {
           <Header
             notes={sortedNotes}
             sortBy={sortBy}
-            onSort={(e) => setSortBy(e.target.value)}
+            onSort={(e) =>
+              dispatch({ type: "SET_SORT_BY", payload: e.target.value })
+            }
           />
 
           {error && <p role="alert">{error}</p>}
@@ -194,14 +233,18 @@ function App() {
             <p>Loading notes...</p>
           ) : (
             <>
-              <AddNotes setNotes={setNotes} />
+              <AddNotes />
 
               <ShowNotes
                 notes={sortedNotes}
                 onDelete={handleDeleteNote}
                 onComplete={handleCompleteNotes}
-                onEdit={(note) => setEditingNote(note)}
-                onEditNote={(note) => setEditingNote(note)}
+                onEdit={(note) =>
+                  dispatch({ type: "SET_EDITING_NOTE", payload: note })
+                }
+                onEditNote={(note) =>
+                  dispatch({ type: "SET_EDITING_NOTE", payload: note })
+                }
               />
             </>
           )}
@@ -210,12 +253,22 @@ function App() {
             <EditModal
               editingNote={editingNote}
               onSave={handleUpdateNote}
-              onCancel={() => setEditingNote(null)}
+              onCancel={() =>
+                dispatch({ type: "SET_EDITING_NOTE", payload: null })
+              }
             />
           )}
         </div>
       )}
     </>
+  );
+}
+
+function App() {
+  return (
+    <NotesProvider>
+      <AppContent />
+    </NotesProvider>
   );
 }
 
