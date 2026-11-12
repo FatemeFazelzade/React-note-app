@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { supabase } from "../lib/supabaseClient";
+import { useNotesDispatch } from "../context/NotesContext";
 
 const NOTE_COLORS = [
   "#ffffff",
@@ -11,6 +12,7 @@ const NOTE_COLORS = [
 ];
 
 function AddNotes({ setNotes }) {
+  const notesDispatch = useNotesDispatch();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [color, setColor] = useState(NOTE_COLORS[0]);
@@ -62,7 +64,7 @@ function AddNotes({ setNotes }) {
         createdAt: data.created_at,
       };
 
-      setNotes((prevNotes) => [...prevNotes, newNote]);
+      notesDispatch({ type: "add", payload: newNote });
       handleResetForm();
     } catch (err) {
       setError(err.message || "Failed to add note.");
