@@ -1,5 +1,6 @@
 import { useEffect, useReducer } from "react";
 import { supabase } from "./lib/supabaseClient";
+import "./App.css";
 import Auth from "./components/Auth";
 import Header from "./components/Header";
 import AddNotes from "./components/AddNotes";
@@ -25,22 +26,22 @@ const initialState = {
 function reducer(state, action) {
   switch (action.type) {
     case "SET_SESSION":
-      return { ...state, session: GAPGPTMASKTOKENy6ohi8urpfgX5X };
+      return { ...state, session: action.payload };
 
     case "SET_AUTH_LOADING":
-      return { ...state, authLoading: GAPGPTMASKTOKENy6ohi8urpfgX6X };
+      return { ...state, authLoading: action.payload };
 
     case "SET_NOTES_LOADING":
-      return { ...state, notesLoading: GAPGPTMASKTOKENy6ohi8urpfgX7X };
+      return { ...state, notesLoading: action.payload };
 
     case "SET_ERROR":
-      return { ...state, error: GAPGPTMASKTOKENy6ohi8urpfgX8X };
+      return { ...state, error: action.payload };
 
     case "SET_EDITING_NOTE":
-      return { ...state, editingNote: GAPGPTMASKTOKENy6ohi8urpfgX9X };
+      return { ...state, editingNote: action.payload };
 
     case "SET_SORT_BY":
-      return { ...state, sortBy: GAPGPTMASKTOKENy6ohi8urpfgX10X };
+      return { ...state, sortBy: action.payload };
 
     default:
       return state;
