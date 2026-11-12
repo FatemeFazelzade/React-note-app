@@ -1,11 +1,11 @@
 import { useEffect, useReducer } from "react";
-import supabase from "./supabaseClient";
-import Auth from "./Auth";
-import Header from "./Header";
-import AddNotes from "./AddNotes";
-import ShowNotes from "./ShowNotes";
-import EditModal from "./EditModal";
-import UpdateModal from "./UpdateModal";
+import supabase from "./lib/supabaseClient";
+import Auth from "./components/Auth";
+import Header from "./components/Header";
+import AddNotes from "./components/AddNotes";
+import ShowNotes from "./components/ShowNotes";
+import EditModal from "./components/EditModal";
+import UpdateModal from "./components/UpdateModal";
 import { Toaster } from "sonner";
 import {
   NotesProvider,
