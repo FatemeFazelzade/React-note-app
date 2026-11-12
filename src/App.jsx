@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from "react";
-import supabase from "./lib/supabaseClient";
+import { supabase } from "./lib/supabaseClient";
 import Auth from "./components/Auth";
 import Header from "./components/Header";
 import AddNotes from "./components/AddNotes";
